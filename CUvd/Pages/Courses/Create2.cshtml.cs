@@ -35,8 +35,7 @@ namespace ContosoUniversity.Pages.Courses
         [BindProperty]
         public Course Course { get; set; }
 
-        [BindProperty]
-        public MySelectListWrapper MySelectListWrapper { get; set; }
+        public SelectList SL_DepartmentID { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -66,9 +65,9 @@ namespace ContosoUniversity.Pages.Courses
             var departmentsQuery = from d in _context.Departments
                                    orderby d.Name
                                    select d;
-            MySelectListWrapper = new MySelectListWrapper();
-            MySelectListWrapper.SL_DepartmentID = new SelectList(departmentsQuery.AsNoTracking(),
-                "DepartmentID", "Name", selectedDepartment);
+
+            SL_DepartmentID = new SelectList(departmentsQuery.AsNoTracking(),
+    "DepartmentID", "Name", selectedDepartment);
         }
     }
 }
