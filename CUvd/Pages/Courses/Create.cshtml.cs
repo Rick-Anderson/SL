@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,9 +21,10 @@ namespace ContosoUniversity.Pages.Courses
         public IActionResult OnGet()
         {
             PopulateDepartmentsDropDownList();
+            Random rnd = new Random();
             Course = new Course
             {
-                CourseID = 1111,
+                CourseID = rnd.Next(),
                 Credits = 3,
                 DepartmentID = 2,
                 Title = "Algebra 9"
