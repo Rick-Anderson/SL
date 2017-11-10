@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ContosoUniversity.Pages.Courses
 {
-    public class EditModel : PageModel
+    public class EditModel : DDL_PageModel
     {
         private readonly ContosoUniversity.Data.SchoolContext _context;
 
@@ -34,7 +34,7 @@ namespace ContosoUniversity.Pages.Courses
             {
                 return NotFound();
             }
-            PopulateDepartmentsDropDownList(Course.DepartmentID);
+            PopulateDepartmentsDropDownList(_context,Course.DepartmentID);
             return Page();
         }
 
@@ -56,17 +56,9 @@ namespace ContosoUniversity.Pages.Courses
                 return RedirectToPage("./Index");
             }
 
-            PopulateDepartmentsDropDownList();
+            PopulateDepartmentsDropDownList(_context);
             return Page();
         }
-
-        private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
-        {
-            var departmentsQuery = from d in _context.Departments
-                                   orderby d.Name
-                                   select d;
-            ViewData["DepartmentID"] = new SelectList(departmentsQuery.AsNoTracking(),
-                "DepartmentID", "Name", selectedDepartment);
-        }
+       
     }
 }
