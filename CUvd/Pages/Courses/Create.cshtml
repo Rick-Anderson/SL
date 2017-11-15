@@ -1,7 +1,7 @@
 @page
 @model ContosoUniversity.Pages.Courses.CreateModel
 @{
-    ViewData["Title"] = "Create DDL_PageModel";
+    ViewData["Title"] = "Create Course";
 }
 <h2>Create</h2>
 <h4>Course</h4>
@@ -28,7 +28,7 @@
             <div class="form-group">
                 <label asp-for="Course.Department" class="control-label"></label>
                 <select asp-for="Course.DepartmentID" class="form-control"
-                        asp-items="@Model.SL_DepartmentID">
+                        asp-items="@Model.DepartmentNameSL">
                     <option value="">-- Select Department --</option>
                 </select>
                 <span asp-validation-for="Course.DepartmentID" class="text-danger" />

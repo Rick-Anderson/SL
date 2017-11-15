@@ -1,26 +1,22 @@
 using ContosoUniversity.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ContosoUniversity.Pages.Courses
 {
-    public class Create2Model : PageModel
+    public class TestCreate : DepartmentNamePageModel
     {
         private readonly ContosoUniversity.Data.SchoolContext _context;
 
-        public Create2Model(ContosoUniversity.Data.SchoolContext context)
+        public TestCreate(ContosoUniversity.Data.SchoolContext context)
         {
             _context = context;
         }
 
         public IActionResult OnGet()
         {
-            PopulateDepartmentsDropDownList();
+            PopulateDepartmentsDropDownList(_context);
             Random rnd = new Random();
             Course = new Course
             {
@@ -34,8 +30,6 @@ namespace ContosoUniversity.Pages.Courses
 
         [BindProperty]
         public Course Course { get; set; }
-
-        public SelectList SL_DepartmentID { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -56,18 +50,9 @@ namespace ContosoUniversity.Pages.Courses
                 return RedirectToPage("./Index");
             }
 
-            PopulateDepartmentsDropDownList();
+            PopulateDepartmentsDropDownList(_context);
             return Page();
         }
 
-        private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
-        {
-            var departmentsQuery = from d in _context.Departments
-                                   orderby d.Name
-                                   select d;
-
-            SL_DepartmentID = new SelectList(departmentsQuery.AsNoTracking(),
-    "DepartmentID", "Name", selectedDepartment);
-        }
-    }
+      }
 }

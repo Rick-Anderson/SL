@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 
-namespace ContosoUniversity.Pages.Instructors
+namespace ContosoUniversity.Pages.Departments
 {
     public class DetailsModel : PageModel
     {
@@ -19,7 +19,7 @@ namespace ContosoUniversity.Pages.Instructors
             _context = context;
         }
 
-        public Instructor Instructor { get; set; }
+        public Department Department { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -28,9 +28,10 @@ namespace ContosoUniversity.Pages.Instructors
                 return NotFound();
             }
 
-            Instructor = await _context.Instructors.FirstOrDefaultAsync(m => m.ID == id);
+            Department = await _context.Departments
+                .Include(d => d.Administrator).FirstOrDefaultAsync(m => m.DepartmentID == id);
 
-            if (Instructor == null)
+            if (Department == null)
             {
                 return NotFound();
             }

@@ -1,13 +1,16 @@
+//#define first
+#if first
 using ContosoUniversity.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
 namespace ContosoUniversity.Pages.Instructors
 {
-    #region snippet
-    public class EditModel : InstructorCoursesPageModel
+#region snippet
+    public class EditModel : PageModel
     {
         private readonly ContosoUniversity.Data.SchoolContext _context;
 
@@ -28,7 +31,6 @@ namespace ContosoUniversity.Pages.Instructors
 
             Instructor = await _context.Instructors
                 .Include(i => i.OfficeAssignment)
-                .Include(i => i.CourseAssignments).ThenInclude(i => i.Course)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
 
@@ -36,11 +38,10 @@ namespace ContosoUniversity.Pages.Instructors
             {
                 return NotFound();
             }
-            PopulateAssignedCourseData(_context, Instructor);
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id, string[] selectedCourses)
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (!ModelState.IsValid)
             {
@@ -49,14 +50,12 @@ namespace ContosoUniversity.Pages.Instructors
 
             var instructorToUpdate = await _context.Instructors
                 .Include(i => i.OfficeAssignment)
-                .Include(i => i.CourseAssignments)
-                    .ThenInclude(i => i.Course)
                 .FirstOrDefaultAsync(s => s.ID == id);
 
             if (await TryUpdateModelAsync<Instructor>(
                 instructorToUpdate,
                 "Instructor",
-                i => i.FirstMidName, i => i.LastName,
+                i => i.FirstMidName, i => i.LastName, 
                 i => i.HireDate, i => i.OfficeAssignment))
             {
                 if (String.IsNullOrWhiteSpace(
@@ -64,14 +63,12 @@ namespace ContosoUniversity.Pages.Instructors
                 {
                     instructorToUpdate.OfficeAssignment = null;
                 }
-                UpdateInstructorCourses(_context, selectedCourses, instructorToUpdate);
                 await _context.SaveChangesAsync();
-                return RedirectToPage("./Index");
             }
-            UpdateInstructorCourses(_context, selectedCourses, instructorToUpdate);
-            PopulateAssignedCourseData(_context, instructorToUpdate);
-            return Page();
+            return RedirectToPage("./Index");
+
         }
     }
-    #endregion
+#endregion
 }
+#endif

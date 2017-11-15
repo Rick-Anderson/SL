@@ -1,14 +1,11 @@
 using ContosoUniversity.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ContosoUniversity.Pages.Courses
 {
-    public class EditModel : DDL_PageModel
+    public class EditModel : DepartmentNamePageModel
     {
         private readonly ContosoUniversity.Data.SchoolContext _context;
 
@@ -28,12 +25,14 @@ namespace ContosoUniversity.Pages.Courses
             }
 
             Course = await _context.Courses
-                .Include(c => c.Department).SingleOrDefaultAsync(m => m.CourseID == id);
+                .Include(c => c.Department).FirstOrDefaultAsync(m => m.CourseID == id);
 
             if (Course == null)
             {
                 return NotFound();
             }
+
+            // Select current DepartmentID.
             PopulateDepartmentsDropDownList(_context,Course.DepartmentID);
             return Page();
         }
@@ -56,9 +55,9 @@ namespace ContosoUniversity.Pages.Courses
                 return RedirectToPage("./Index");
             }
 
-            PopulateDepartmentsDropDownList(_context);
+            // Select DepartmentID if TryUpdateModelAsync fails.
+            PopulateDepartmentsDropDownList(_context, courseToUpdate.DepartmentID);
             return Page();
-        }
-       
+        }       
     }
 }

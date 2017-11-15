@@ -1,15 +1,17 @@
 using ContosoUniversity.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ContosoUniversity.Pages.Instructors
 {
-    public class CreateModel : InstructorCoursesPageModel
+    public class TestCreateModel : InstructorCoursesPageModel
     {
         private readonly ContosoUniversity.Data.SchoolContext _context;
 
-        public CreateModel(ContosoUniversity.Data.SchoolContext context)
+        public TestCreateModel(ContosoUniversity.Data.SchoolContext context)
         {
             _context = context;
         }
@@ -18,11 +20,14 @@ namespace ContosoUniversity.Pages.Instructors
         {
             var instructor = new Instructor();
             instructor.CourseAssignments = new List<CourseAssignment>();
-
-            // Provides an empty collection for the foreach loop
-            // foreach (var course in Model.AssignedCourseDataList)
-            // in the Create Razor page.
             PopulateAssignedCourseData(_context, instructor);
+
+            Instructor = new Instructor
+            {
+                FirstMidName = "Rick",
+                LastName = "Anderson",
+                HireDate = DateTime.Now
+            };
             return Page();
         }
 
@@ -56,10 +61,12 @@ namespace ContosoUniversity.Pages.Instructors
                 i => i.FirstMidName, i => i.LastName,
                 i => i.HireDate, i => i.OfficeAssignment))
             {
-                _context.Instructors.Add(newInstructor);                
+                _context.Instructors.Add(newInstructor);               
                 await _context.SaveChangesAsync();
                 return RedirectToPage("./Index");
             }
+
+            // If TryUpdateModelAsync fails, repopulate course selections
             PopulateAssignedCourseData(_context, newInstructor);
             return Page();
         }

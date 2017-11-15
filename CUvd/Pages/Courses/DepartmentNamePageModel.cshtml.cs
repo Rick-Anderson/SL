@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ContosoUniversity.Pages.Courses
 {
-    public class DDL_PageModel : PageModel
+    public class DepartmentNamePageModel : PageModel
     {
         public SelectList DepartmentNameSL { get; set; }
 
@@ -14,7 +14,7 @@ namespace ContosoUniversity.Pages.Courses
             object selectedDepartment = null)
         {
             var departmentsQuery = from d in _context.Departments
-                                   orderby d.Name
+                                   orderby d.Name // Sort by name.
                                    select d;
 
             DepartmentNameSL = new SelectList(departmentsQuery.AsNoTracking(),
